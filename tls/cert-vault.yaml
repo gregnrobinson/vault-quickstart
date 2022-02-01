@@ -1,0 +1,18 @@
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: vault-phronesis-cert
+  namespace: vault
+spec:
+  secretName: vault-phronesis-cert
+  dnsNames:
+  - 'vault.phronesis.cloud'
+  acme:
+    config:
+    - dns01:
+        provider: cloudflare
+      domains:
+      - 'vault.phronesis.cloud'
+  issuerRef:
+    name: letsencrypt-prod
+    kind: ClusterIssuer

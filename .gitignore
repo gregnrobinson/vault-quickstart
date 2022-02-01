@@ -1,0 +1,4 @@
+*.json
+.certs
+*.pem
+*.crt

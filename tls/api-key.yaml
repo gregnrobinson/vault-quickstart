@@ -1,0 +1,8 @@
+apiVersion: v1
+kind: Secret
+metadata:
+  name: cloudflare-key
+  namespace: cert-manager
+type: Opaque
+stringData:
+  api-key: 388e48efaa578a6fa3319dde81f6224100852

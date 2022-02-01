@@ -1,0 +1,4 @@
+hvac
+async-hvac
+httpserver
+vault-cli

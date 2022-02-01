@@ -1,0 +1,58 @@
+---
+apiVersion: cert-manager.io/v1
+kind: ClusterIssuer
+metadata:
+  name: letsencrypt-staging
+  namespace: cert-manager
+spec:
+  acme:
+    # You must replace this email address with your own.
+    # Let's Encrypt will use this to contact you about expiring
+    # certificates, and issues related to your account.
+    email: greg.robinson@phronesis.cloud
+    server: https://acme-staging-v02.api.letsencrypt.org/directory
+    privateKeySecretRef:
+      # Secret resource used to store the account's private key.
+      name: cluster-issuer-account-key
+    solvers:
+    - selector: {}
+      dns01:
+        cloudflare:
+          # Email linked to CloudFlare Account
+          email: gregnrobinson@gmail.com
+          apiKeySecretRef:
+            name: cloudflare-key
+            key: api-key
+---
+apiVersion: cert-manager.io/v1
+kind: ClusterIssuer
+metadata:
+  name: letsencrypt-prod
+  namespace: cert-manager
+spec:
+  acme:
+    # You must replace this email address with your own.
+    # Let's Encrypt will use this to contact you about expiring
+    # certificates, and issues related to your account.
+    email: greg.robinson@phronesis.cloud
+    server: https://acme-v02.api.letsencrypt.org/directory
+    privateKeySecretRef:
+      # Secret resource used to store the account's private key.
+      name: cluster-issuer-prod-account-key
+    solvers:
+    - selector: {}
+      dns01:
+        cloudflare:
+          # Email linked to CloudFlare Account
+          email: gregnrobinson@gmail.com
+          apiKeySecretRef:
+            name: cloudflare-key
+            key: api-key
+---
+apiVersion: cert-manager.io/v1
+kind: ClusterIssuer
+metadata:
+  name: selfsigning-issuer
+  namespace: cert-manager
+spec:
+  selfSigned: {}

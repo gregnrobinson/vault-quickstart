@@ -1,0 +1,37 @@
+global:
+  # The main enabled/disabled setting. If true, servers,
+  # clients, Consul DNS and the Consul UI will be enabled. Each component can override
+  # this default via its component-specific "enabled" config. If false, no components
+  # will be installed by default and per-component opt-in is required, such as by
+  # setting `server.enabled` to true.
+  enabled: true
+
+ui:
+  enabled: true
+  service:
+    enabled: true
+    type: LoadBalancer
+  ingress:
+    enabled: true
+    pathType: Prefix
+    hosts:
+    - host: consul.phronesis.cloud
+      http:
+        paths:
+        - path: /
+          pathType: Prefix
+          backend:
+            service:
+              name: consul-ui
+              port:
+                number: 80
+    tls:
+      - hosts:
+        - consul.phronesis.cloud
+        secretName: consul-phronesis-cert
+    annotations: |
+      kubernetes.io/ingress.class: nginx
+
+server:
+  storage: 10Gi
+  storageClass: nfs-client
