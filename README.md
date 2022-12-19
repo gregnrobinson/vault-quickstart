@@ -4,6 +4,7 @@ This quickstart walks through a Vault installation using Helm with an HA configu
 
 - [Prerequisites](#prerequisites)
   * [Set Environment Variables](#set-environment-variables)
+  * [Install Vault Tools](#install-vault-tools)
   * [Enable APIs](#enable-apis)
   * [Create Storage Bucket](#create-storage-bucket)
   * [Create KMS Keyring and Key](#create-kms-keyring-and-key)
