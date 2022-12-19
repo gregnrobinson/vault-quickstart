@@ -504,7 +504,7 @@ plaintext    hello
 
 Place the functions in ~/.bashrc or ~/.zshrc and execute as commands
 
-```
+```bash
 # encrypt plaintext data
 # usage: vault-encrypt <plain_text>
 vault-encrypt() {
