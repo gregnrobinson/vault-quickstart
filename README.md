@@ -17,7 +17,6 @@ This quickstart walks through a Vault installation using Helm with an HA configu
   * [GCP Configuration](#gcp-configuration)
   * [Add Certificates to Ingress Resources](#add-certificates-to-ingress-resources)
   * [Ingress using Cloudflare](#ingress-using-cloudflare)
-  * [Ingress using Selfsigned](#ingress-using-selfsigned)
   * [Disable unused auth methods](#disable-unused-auth-methods)
 - [Setup GCP Engine Rolesets](#setup-gcp-engine-rolesets)
   * [Write initial GCP credentials to engine](#write-initial-gcp-credentials-to-engine)
@@ -338,48 +337,6 @@ spec:
   - hosts:
       - <DOMAIN_LINKED_TO_CERT>
     secretName: vault-phronesis-cert # <---- SECRET WITH CERT
-  rules:
-  - host: <DOMAIN_LINKED_TO_CERT>
-    http:
-      paths:
-      - path: /
-        pathType: Prefix
-        backend:
-          service:
-            name: service1
-            port:
-              number: 80
-```
-
-### Ingress using Selfsigned
-
-```yaml
-# Certificate
-apiVersion: cert-manager.io/v1
-kind: Certificate
-metadata:
-  name: consul-phronesis-cert
-  namespace: consul
-spec:
-  secretName: consul-phronesis-cert # <---- SECRET THAT WILL STORE CERT
-  dnsNames:
-  - 'consul.phronesis.cloud'
-  issuerRef:
-    name: selfsigning-issuer
-    kind: ClusterIssuer
-    group: cert-manager.io
----
-# Ingress
-apiVersion: networking.k8s.io/v1
-kind: Ingress
-metadata:
-  name: tls-selfsigned-ingress
-  namespace: <NAMESPACE_WITH_CERT>
-spec:
-  tls:
-  - hosts:
-      - <DOMAIN_LINKED_TO_CERT>
-    secretName: consul-phronesis-cert # <---- SECRET WITH CERT
   rules:
   - host: <DOMAIN_LINKED_TO_CERT>
     http:
