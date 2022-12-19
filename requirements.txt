@@ -2,3 +2,4 @@ hvac
 async-hvac
 httpserver
 vault-cli
+jq
