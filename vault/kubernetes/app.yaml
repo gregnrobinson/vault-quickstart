@@ -1,0 +1,32 @@
+# app.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: app
+  labels:
+    app: vault-agent-demo
+spec:
+  selector:
+    matchLabels:
+      app: vault-agent-demo
+  replicas: 1
+  template:
+    metadata:
+      annotations:
+        vault.hashicorp.com/agent-inject-secret: "repos/vault-quickstart/"
+        vault.hashicorp.com/role: "vault-auth"
+        vault.hashicorp.com/log-level: "debug"
+      labels:
+        app: vault-agent-demo
+    spec:
+      serviceAccountName: vault-auth
+      containers:
+      - name: app
+        image: arm64v8/nginx
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: vault-auth
+  labels:
+    app: vault-agent-demo

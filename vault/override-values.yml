@@ -1,0 +1,87 @@
+global:
+  enabled: true
+  image: "vault:1.12.1"
+server:
+  extraEnvironmentVars:
+    GOOGLE_REGION: northamerica-northeast2
+    GOOGLE_PROJECT: phronesis-cloud
+    GOOGLE_CREDENTIALS: /vault/userconfig/kms-creds/credentials.json
+    GOOGLE_APPLICATION_CREDENTIALS: /vault/userconfig/kms-creds/credentials.json
+    VAULT_ADDR: http://127.0.0.1:8200
+    VAULT_SKIP_VERIFY: true
+  extraVolumes:
+  - type: secret
+    name: kms-creds
+    path: "/vault/userconfig"
+  ha:
+    enabled: true
+    replicas: 3
+    raft:
+      enabled: true
+      config: |
+        ui = true
+
+        listener "tcp" {
+          tls_disable = 1
+          address = "[::]:8200"
+          cluster_address = "[::]:8201"
+        }
+
+        storage "raft" {
+            path = "/vault/data"
+        }
+
+        seal "gcpckms" {
+          project     = "phronesis-cloud"
+          region      = "northamerica-northeast2"
+          key_ring    = "vault"
+          crypto_key  = "auto-seal"
+        }
+
+        service_registration "kubernetes" {}
+  ingress:
+    enabled: true
+    labels: {}
+      # traffic: external
+    annotations:
+      kubernetes.io/ingress.class: nginx
+
+    # Optionally use ingressClassName instead of deprecated annotation.
+    # See: https://kubernetes.io/docs/concepts/services-networking/ingress/#deprecated-annotation
+    ingressClassName: ""
+
+    # As of Kubernetes 1.19, all Ingress Paths must have a pathType configured. The default value below should be sufficient in most cases.
+    # See: https://kubernetes.io/docs/concepts/services-networking/ingress/#path-types for other possible values.
+    pathType: Prefix
+
+    # When HA mode is enabled and K8s service registration is being used,
+    # configure the ingress to point to the Vault active service.
+    activeService: true
+    hosts:
+    - host: vault.phronesis.cloud
+      http:
+        paths:
+        - path: /
+          pathType: Prefix
+          backend:
+            service:
+              name: vault-ui
+              port:
+                number: 80
+     # Extra paths to prepend to the host configuration. This is useful when working with annotation based services.
+    tls:
+      - secretName: vault-phronesis-cert
+        hosts:
+          - vault.phronesis.cloud
+  service:
+    enabled: true
+
+  dataStorage:
+    enabled: true
+    size: 10Gi
+    storageClass: nfs-client
+    accessMode: ReadWriteOnce
+
+ui:
+  enabled: true
+  serviceType: LoadBalancer
