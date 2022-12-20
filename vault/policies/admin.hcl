@@ -11,6 +11,14 @@ path "sys/policies/acl/*" {
   capabilities = [ "create", "read", "update", "delete", "list" ]
 }
 
+path "transit/*" {
+  capabilities = [ "create", "read", "update", "delete", "list" ]
+}
+
+path "kubernetes/*" {
+  capabilities = [ "create", "read", "update", "delete", "list" ]
+}
+
 path "secret*" {
   capabilities = [ "create", "read", "update", "delete", "list" ]
 }
