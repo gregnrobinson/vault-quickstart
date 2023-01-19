@@ -3,3 +3,4 @@ async-hvac
 httpserver
 vault-cli
 jq
+aiohttp>=3.8.0 # not directly required, pinned by Snyk to avoid a vulnerability
